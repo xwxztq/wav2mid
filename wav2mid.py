@@ -2,7 +2,9 @@ import os
 import soundfile
 from onsets_and_frames import *
 import numpy as np
+import pydub
 from mir_eval.util import midi_to_hz
+
 
 def getdata(audio_path):
     audio, sr = soundfile.read(audio_path, dtype='int16')
@@ -25,6 +27,7 @@ def getdata(audio_path):
     result['frame'] = (result['label'] > 1).float()
     result['velocity'] = result['velocity'].float().div_(128.0)
     return result
+
 
 def eva(label, model, onset_threshold=0.5, frame_threshold=0.5, save_path=None):
     pred, losses = model.run_on_batch(label)
@@ -50,24 +53,31 @@ def eva(label, model, onset_threshold=0.5, frame_threshold=0.5, save_path=None):
         midi_path = os.path.join(save_path, os.path.basename(label['path']) + '.pred.mid')
         save_midi(midi_path, p_est, i_est, v_est)
     return midi_path
+
+
 def transfer(audio_path, save_path):
     format = audio_path[-3:]
     if (format == 'mp3'):
-        filename=audio_path[:-3]
-        cmd = "ffmpeg -y -loglevel fatal -i %smp3 -ac 1 -ar 16000 %sflac" % (filename, filename)
-        print(cmd)
-        os.system(cmd)
-        audio_path=filename+"flac"
-        print(audio_path)
+        filename = audio_path[:-3]
+        sound = pydub.AudioSegment.from_mp3(filename + "mp3")
+        sound.export(filename + "flac", format="flac")
+        # audio_path=filename+"flac"
+        # print(audio_path)
     if (format == 'wav'):
-        filename=audio_path[:-3]
-        cmd = "ffmpeg -y -loglevel fatal -i %swav -ac 1 -ar 16000 %sflac" % (filename, filename)
-        print(cmd)
-        os.system(cmd)
-        audio_path=filename+"flac"
-        print(audio_path)
+        filename = audio_path[:-3]
+        sound = pydub.AudioSegment.from_file(filename + "wav")
+        sound.export(filename + "flac", format="flac")
+        # cmd = "ffmpeg -y -loglevel fatal -i %swav -ac 1 -ar 16000 %sflac" % (filename, filename)
+        # print(cmd)
+        # os.system(cmd)
+        # audio_path=filename+"flac"
+        # print(audio_path)
+
     data = getdata(audio_path)
-    device='cpu'
+    device = 'cpu'
     model = torch.load("model.pt", map_location=device).eval()
-    return(eva(data, model,save_path=save_path))
-transfer("blues.mp3", "output/")
+    return (eva(data, model, save_path=save_path))
+
+
+if __name__ == '__main__':
+    transfer("blues.mp3", "output/")
