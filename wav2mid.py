@@ -60,18 +60,17 @@ def transfer(audio_path, save_path):
     if (format == 'mp3'):
         filename = audio_path[:-3]
         sound = pydub.AudioSegment.from_mp3(filename + "mp3")
-        sound.export(filename + "flac", format="flac")
-        # audio_path=filename+"flac"
-        # print(audio_path)
+        sound.export(filename + "flac", format="flac", parameters = ["-loglevel", "fatal", "-ac", "1", "-ar", "16000"])
+        audio_path=filename+"flac"
+        print(audio_path)
     if (format == 'wav'):
         filename = audio_path[:-3]
         sound = pydub.AudioSegment.from_file(filename + "wav")
-        sound.export(filename + "flac", format="flac")
-        # cmd = "ffmpeg -y -loglevel fatal -i %swav -ac 1 -ar 16000 %sflac" % (filename, filename)
+        sound.export(filename + "flac", format="flac", parameters = ["-loglevel", "fatal", "-ac", "1", "-ar", "16000"])
         # print(cmd)
         # os.system(cmd)
-        # audio_path=filename+"flac"
-        # print(audio_path)
+        audio_path=filename+"flac"
+        print(audio_path)
 
     data = getdata(audio_path)
     device = 'cpu'
