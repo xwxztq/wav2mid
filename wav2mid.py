@@ -1,4 +1,5 @@
 import os
+import sys
 import soundfile
 from .onsets_and_frames import *
 import numpy as np
@@ -63,14 +64,24 @@ def transfer(audio_path, save_path):
         sound.export(filename + "flac", format="flac", parameters = ["-loglevel", "fatal", "-ac", "1", "-ar", "16000"])
         audio_path=filename+"flac"
         print(audio_path)
-    if (format == 'wav'):
+    elif (format == 'wav'):
         filename = audio_path[:-3]
-        sound = pydub.AudioSegment.from_file(filename + "wav")
+        sound = pydub.AudioSegment.from_file(filename + "wav",format="wav")
         sound.export(filename + "flac", format="flac", parameters = ["-loglevel", "fatal", "-ac", "1", "-ar", "16000"])
         # print(cmd)
         # os.system(cmd)
         audio_path=filename+"flac"
         print(audio_path)
+    else:
+        filename = os.path.split(audio_path)
+        pure_name = filename[1].split('.')
+        the_format = pure_name[1]
+        print(filename)
+        print(pure_name)
+        sound = pydub.AudioSegment.from_file(audio_path,format=pure_name[1])
+        audio_path = filename[0]+"tmp"+".flac"
+        sound.export(audio_path, format="flac",parameters=["-loglevel", "fatal", "-ac", "1", "-ar", "16000"])
+
 
     data = getdata(audio_path)
     device = 'cpu'
