@@ -1,6 +1,6 @@
 import os
 import soundfile
-from onsets_and_frames import *
+from .onsets_and_frames import *
 import numpy as np
 import pydub
 from mir_eval.util import midi_to_hz
