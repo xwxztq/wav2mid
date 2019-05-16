@@ -78,7 +78,7 @@ def transfer(audio_path, save_path):
         print(filename)
         print(pure_name)
         sound = pydub.AudioSegment.from_file(audio_path, format=the_format)
-        audio_path = os.path.join(MEDA_PATH,the_formatm,pure_name[0]+pure_name[1]+"." +the_format)
+        audio_path = os.path.join(MEDA_PATH,the_format,pure_name[0]+pure_name[1]+"." +the_format)
         print(audio_path)
         sound.export(audio_path, format="flac", parameters=["-loglevel", "fatal", "-ac", "1", "-ar", "16000"])
 
