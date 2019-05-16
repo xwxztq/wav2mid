@@ -5,6 +5,7 @@ from .onsets_and_frames import *
 import numpy as np
 import pydub
 from mir_eval.util import midi_to_hz
+from pybackend.settings import MEDA_PATH
 
 
 def getdata(audio_path):
@@ -77,7 +78,7 @@ def transfer(audio_path, save_path):
         print(filename)
         print(pure_name)
         sound = pydub.AudioSegment.from_file(audio_path, format=the_format)
-        audio_path = filename[0] + pure_name[0] + pure_name[1] + ".flac"
+        audio_path = os.path.join(MEDA_PATH,the_formatm,pure_name[0]+pure_name[1]+"." +the_format)
         print(audio_path)
         sound.export(audio_path, format="flac", parameters=["-loglevel", "fatal", "-ac", "1", "-ar", "16000"])
 
