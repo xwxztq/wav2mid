@@ -50,7 +50,6 @@ def eva(label, model, onset_threshold=0.5, frame_threshold=0.5, save_path=None):
     f_est = [np.array([midi_to_hz(MIN_MIDI + midi) for midi in freqs]) for freqs in f_est]
 
     if save_path is not None:
-        os.makedirs(save_path, exist_ok=True)
         save_midi(save_path, p_est, i_est, v_est)
     return save_path
 
