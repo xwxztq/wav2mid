@@ -51,9 +51,8 @@ def eva(label, model, onset_threshold=0.5, frame_threshold=0.5, save_path=None):
 
     if save_path is not None:
         os.makedirs(save_path, exist_ok=True)
-        midi_path = os.path.join(save_path, os.path.basename(label['path']) + '.pred.mid')
-        save_midi(midi_path, p_est, i_est, v_est)
-    return midi_path
+        save_midi(save_path, p_est, i_est, v_est)
+    return save_path
 
 
 def transfer(audio_path, save_path):
